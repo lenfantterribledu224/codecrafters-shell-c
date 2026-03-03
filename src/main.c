@@ -9,15 +9,14 @@ while(1){
   printf("$ ");
   fgets(command, sizeof(command), stdin);
   command[strcspn(command, "\n")] = '\0';
-  char *cmd = strtok(command, " ");
-  char *args = strtok(NULL, "\n");
+  char *cmd = strncmp(command, "echo ", 5) == 0 ;
+  char *args = cmd + 5; // Move past "echo "
   if (strcmp(cmd, "exit") == 0) {
     break;
 } else if (strcmp(cmd, "echo") == 0) {
     printf("%s\n", args);
 } else {
-  printf("%s: command not found\n", command);
-
+  printf("%s: command not found\n", cmd);
 }
 }
   return 0;
