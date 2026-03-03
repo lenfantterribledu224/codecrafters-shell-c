@@ -7,7 +7,7 @@ int main(int argc, char *argv[]) {
   char command[1024];
   printf("$ ");
   fgets(command, sizeof(command), stdin);
-  printf("%s: command not found\n", command);
+  printf("%s: command not found", command);
 
 
   return 0;
