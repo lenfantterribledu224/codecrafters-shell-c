@@ -37,7 +37,6 @@ void do_type(char *args) {
     while (dir != NULL) {
         char full_path[1024];
         snprintf(full_path, sizeof(full_path), "%s/%s", dir, args);
-
         if (access(full_path, X_OK) == 0) {
             printf("%s is %s\n", args, full_path);
             return;
@@ -48,5 +47,20 @@ void do_type(char *args) {
     printf("%s: not found\n", args);
 }
 
+void do_execute(char *command) {
+    // split command into tokens
+    char *args[1024];
+    int i = 0;
+    char *token = strtok(command, " ");
+    while (token != NULL) {
+        args[i++] = token;
+        token = strtok(NULL, " ");
+    }
+    args[i] = NULL;  // execvp needs NULL at the end
 
+    // search PATH and execute
+    execvp(args[0], args);
 
+    // if execvp returns, it failed
+    printf("%s: command not found\n", args[0]);
+}

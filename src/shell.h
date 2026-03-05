@@ -10,6 +10,7 @@ typedef struct {
 void do_echo(char *args);
 void do_exit(char *args);
 void do_type(char *args);
+void do_execute(char *command);
 
 extern Builtin builtins[];
 extern int num_builtins;

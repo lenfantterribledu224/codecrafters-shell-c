@@ -17,7 +17,7 @@ while(1){
   } else if (strncmp(command, "type ", 5) == 0) {
     do_type(command + 5);
   } else {
-    printf("%s: command not found\n", command);
+    do_execute(command);
   }
 }
   return 0;
