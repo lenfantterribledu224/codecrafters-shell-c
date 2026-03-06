@@ -16,6 +16,7 @@ Builtin builtins[] = {
     {"echo", do_echo},
     {"exit", do_exit},
     {"type", do_type},
+    {"pwd", do_pwd}
 };
 int num_builtins = sizeof(builtins) / sizeof(builtins[0]);
 void do_type(char *args) {
@@ -66,4 +67,11 @@ void do_execute(char *command) {
     } else {
         waitpid(pid, NULL, 0);
     }
-}
+};
+
+void do_pwd(char *args) {
+    char cwd[1024];
+    if (getcwd(cwd, sizeof(cwd)) != NULL) {
+        printf("%s\n", cwd);
+    }
+};

@@ -11,6 +11,7 @@ void do_echo(char *args);
 void do_exit(char *args);
 void do_type(char *args);
 void do_execute(char *command);
+void do_pwd(char *args);
 
 extern Builtin builtins[];
 extern int num_builtins;

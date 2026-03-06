@@ -16,6 +16,8 @@ while(1){
     do_echo(command + 5);
   } else if (strncmp(command, "type ", 5) == 0) {
     do_type(command + 5);
+  } else if (strncmp(command, "pwd ",5) == 0) {
+    do_pwd(command + 5);
   } else {
     do_execute(command);
   }
