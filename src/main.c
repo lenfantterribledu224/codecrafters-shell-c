@@ -18,7 +18,9 @@ while(1){
     do_type(command + 5);
   } else if (strcmp(command, "pwd") == 0) {
     do_pwd(NULL);
-} else {
+  } else if (strncmp(command, "cd ", 3) == 0) {
+    do_cd(command + 3);
+  } else {
     do_execute(command);
   }
 }

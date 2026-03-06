@@ -16,9 +16,11 @@ Builtin builtins[] = {
     {"echo", do_echo},
     {"exit", do_exit},
     {"type", do_type},
-    {"pwd", do_pwd}
+    {"pwd", do_pwd},
+    {"cd", do_cd}
 };
 int num_builtins = sizeof(builtins) / sizeof(builtins[0]);
+
 void do_type(char *args) {
     for (int i = 0; i < num_builtins; i++) {
         if (strcmp(args, builtins[i].name) == 0) {
@@ -73,5 +75,14 @@ void do_pwd(char *args) {
     char cwd[1024];
     if (getcwd(cwd, sizeof(cwd)) != NULL) {
         printf("%s\n", cwd);
+    }
+};
+
+void do_cd(char *args) {
+    if (args == NULL || strcmp(args, "~") == 0) {
+        args = getenv("HOME");
+    }
+    if (chdir(args) != 0) {
+        printf("cd: %s: No such file or directory\n", args);
     }
 };
