@@ -6,7 +6,24 @@
 #include <sys/wait.h>
 
 void do_echo(char *args) {
-    printf("%s\n", args);
+    char *p = args;
+    char output[1024];
+    int i = 0;
+
+    while (*p != '\0') {
+        if (*p == '\'') {
+            p++;
+            while (*p != '\'' && *p != '\0') {
+                output[i++] = *p++;
+            }
+            p++;
+        } else {
+            output[i++] = *p++;
+        }
+    }
+    output[i] = '\0';
+
+    printf("%s\n", output);
 }
 
 void do_exit(char *args) {
