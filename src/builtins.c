@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include "shell.h"
 #include <unistd.h>
+#include <sys/wait.h>
 
 void do_echo(char *args) {
     printf("%s\n", args);
@@ -57,10 +57,12 @@ void do_execute(char *command) {
         token = strtok(NULL, " ");
     }
     args[i] = NULL;  // execvp needs NULL at the end
-
-    // search PATH and execute
-    execvp(args[0], args);
-
-    // if execvp returns, it failed
-    printf("%s: command not found\n", args[0]);
+     pid_t pid = fork();
+     if (pid == 0) {
+        execvp(args[0], args);
+        printf("%s: not found\n", args[0]);
+        exit(1);
+    } else {
+        waitpid(pid, NULL, 0);
+    }
 }
