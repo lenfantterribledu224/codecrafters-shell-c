@@ -9,22 +9,32 @@ void do_echo(char *args) {
     char *p = args;
     char output[1024];
     int i = 0;
+    int in_space = 0;
 
-    while (*p != '\0') {
+    while (*p != '\0' && i < (int)sizeof(output) - 1) {
         if (*p == '\'') {
+            in_space = 0;
             p++;
             while (*p != '\'' && *p != '\0') {
                 output[i++] = *p++;
             }
+            if (*p == '\'') p++;
+        } else if (isspace(*p)) {
+            if (i > 0 && !in_space) {
+                output[i++] = ' ';
+                in_space = 1;
+            }
             p++;
         } else {
+            in_space = 0;
             output[i++] = *p++;
         }
     }
-    output[i] = '\0';
 
+    if (i > 0 && output[i - 1] == ' ') i--;
+    output[i] = '\0';
     printf("%s\n", output);
-}
+};
 
 void do_exit(char *args) {
     exit(0);
