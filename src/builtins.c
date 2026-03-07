@@ -4,6 +4,7 @@
 #include "shell.h"
 #include <unistd.h>
 #include <sys/wait.h>
+#include <ctype.h>
 
 void do_echo(char *args) {
     char *p = args;
