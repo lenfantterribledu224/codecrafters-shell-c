@@ -15,7 +15,7 @@ void do_echo(char *args[], int nargs) {
     printf("\n");
 }
 
-void do_exit(char *args) {
+void do_exit(char *args[], int nargs) {
     exit(0);
 }
 Builtin builtins[] = {
