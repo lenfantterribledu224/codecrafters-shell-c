@@ -7,12 +7,15 @@ typedef struct {
 } Builtin;
 
 
-void do_echo(char *args);
+void do_echo(char *args[], int nargs);
 void do_exit(char *args);
-void do_type(char *args);
-void do_execute(char *command);
-void do_pwd(char *args);
-void do_cd(char *args);
+void do_type(char *args[], int nargs);
+void do_execute(char *args[], int nargs);
+
+void do_pwd(char *args[], int nargs);
+void do_cd(char *args[], int nargs);
+
+
 
 extern Builtin builtins[];
 extern int num_builtins;
