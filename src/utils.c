@@ -13,6 +13,9 @@ void parse_single_quotes(char **p, char *token, int *i) {
 void parse_double_quotes(char **p, char *token, int *i) {
     (*p)++;  // skip opening quote
     while (**p != '"' && **p != '\0') {
+        if (**p == '\\') {
+            (*p)++;  // skip backslash, next character is literal
+        }
         token[(*i)++] = **p;
         (*p)++;
     }
