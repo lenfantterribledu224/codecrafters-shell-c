@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <ctype.h>
+#include <string.h>
 void parse_single_quotes(char **p, char *token, int *i) {
     (*p)++;  // skip opening quote
     while (**p != '\'' && **p != '\0') {
