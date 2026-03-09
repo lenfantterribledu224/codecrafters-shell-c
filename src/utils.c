@@ -40,9 +40,7 @@ void parse_args(char *input, char *args[], int *argc) {
                 parse_double_quotes(&p, token, &i);
             } else if (*p == '\\') {
                 p++;  // skip backslash
-                if (*p != '\0') {
-                    token[i++] = *p++;
-                }
+                token[i++] = *p++;
             } else if (isspace(*p)){
                 break;
             }
