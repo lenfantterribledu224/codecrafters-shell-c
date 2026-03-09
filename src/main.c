@@ -19,7 +19,7 @@ while(1){
   parse_args(command, args, &nargs);
 
 
-  if (strcmp(command, "exit") == 0) {
+  if (strcmp(args[0], "exit") == 0)  {
     break;
   } else if (strcmp(args[0], "echo") == 0) {
     do_echo(args, nargs);
