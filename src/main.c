@@ -19,10 +19,7 @@ while(1){
   int nargs = 0;
   parse_args(command, args, &nargs);
   int saved_stdout = handle_redirection(args, &nargs);
-  if (saved_stdout != -1) {
-    dup2(saved_stdout, STDOUT_FILENO);
-    close(saved_stdout);
-}
+
 
   if (strcmp(args[0], "exit") == 0)  {
     break;
@@ -37,6 +34,11 @@ while(1){
   } else {
     do_execute(args, nargs);
   }
+  if (saved_stdout != -1) {
+    dup2(saved_stdout, STDOUT_FILENO);
+    close(saved_stdout);
 }
+}
+
   return 0;
 }
