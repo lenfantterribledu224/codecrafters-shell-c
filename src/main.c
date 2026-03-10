@@ -18,7 +18,9 @@ while(1){
   char *args[1024];
   int nargs = 0;
   parse_args(command, args, &nargs);
-  int saved_stdout = handle_redirection(args, &nargs);
+
+  int redirected_fd = -1;  // default to stdout
+  int saved_fd = handle_redirection(args, &nargs, &redirected_fd);
 
 
   if (strcmp(args[0], "exit") == 0)  {
@@ -34,9 +36,9 @@ while(1){
   } else {
     do_execute(args, nargs);
   }
-  if (saved_stdout != -1) {
-    dup2(saved_stdout, STDOUT_FILENO);
-    close(saved_stdout);
+  if (saved_fd != -1) {
+    dup2(saved_fd, redirected_fd);
+    close(saved_fd);
 }
   free_args(args, nargs);
 }
