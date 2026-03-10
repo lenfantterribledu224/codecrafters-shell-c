@@ -3,6 +3,7 @@
 #include <string.h>
 #include "shell.h"
 #include "utils.h"
+#include <unistd.h>
 
 int main(int argc, char *argv[]) {
 setbuf(stdout, NULL);
@@ -17,7 +18,11 @@ while(1){
   char *args[1024];
   int nargs = 0;
   parse_args(command, args, &nargs);
-
+  int saved_stdout = handle_redirection(args, &nargs);
+  if (saved_stdout != -1) {
+    dup2(saved_stdout, STDOUT_FILENO);
+    close(saved_stdout);
+}
 
   if (strcmp(args[0], "exit") == 0)  {
     break;

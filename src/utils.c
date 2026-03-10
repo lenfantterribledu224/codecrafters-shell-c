@@ -1,6 +1,9 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+
 void parse_single_quotes(char **p, char *token, int *i) {
     (*p)++;  // skip opening quote
     while (**p != '\'' && **p != '\0') {
@@ -57,4 +60,23 @@ void parse_args(char *input, char *args[], int *argc) {
     }
 
     args[*argc] = NULL;
+};
+
+
+int handle_redirection(char *args[], int *nargs) {
+    for (int i = 0; i < *nargs; i++) {
+        if (strcmp(args[i], ">") == 0 || strcmp(args[i], "1>") == 0) {
+            char *filename = args[i + 1];
+            *nargs = i;
+            args[i] = NULL;
+
+            int saved_stdout = dup(STDOUT_FILENO);
+            int fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            dup2(fd, STDOUT_FILENO);
+            close(fd);
+
+            return saved_stdout;
+        }
+    }
+    return -1;  
 }
