@@ -65,21 +65,30 @@ void parse_args(char *input, char *args[], int *argc) {
 
 int handle_redirection(char *args[], int *nargs) {
     for (int i = 0; i < *nargs; i++) {
+        int fd_to_redirect = -1;
+
         if (strcmp(args[i], ">") == 0 || strcmp(args[i], "1>") == 0) {
+            fd_to_redirect = STDOUT_FILENO;
+        } else if (strcmp(args[i], "2>") == 0) {
+            fd_to_redirect = STDERR_FILENO;
+        }
+
+        if (fd_to_redirect != -1) {
             char *filename = args[i + 1];
             *nargs = i;
             args[i] = NULL;
 
-            int saved_stdout = dup(STDOUT_FILENO);
+            int saved_fd = dup(fd_to_redirect);
             int fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-            dup2(fd, STDOUT_FILENO);
+            dup2(fd, fd_to_redirect);
             close(fd);
 
-            return saved_stdout;
+            return saved_fd;
         }
     }
     return -1;
 };
+
 void free_args(char *args[], int argc) {
     for (int i = 0; i < argc; i++) {
         free(args[i]);
