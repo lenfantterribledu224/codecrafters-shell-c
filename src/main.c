@@ -38,6 +38,7 @@ while(1){
     dup2(saved_stdout, STDOUT_FILENO);
     close(saved_stdout);
 }
+  free_args(args, nargs);
 }
 
   return 0;

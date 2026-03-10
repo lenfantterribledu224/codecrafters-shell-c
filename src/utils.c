@@ -78,5 +78,10 @@ int handle_redirection(char *args[], int *nargs) {
             return saved_stdout;
         }
     }
-    return -1;  
+    return -1;
+};
+void free_args(char *args[], int argc) {
+    for (int i = 0; i < argc; i++) {
+        free(args[i]);
+    }
 }
