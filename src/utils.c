@@ -71,7 +71,7 @@ int handle_redirection(char *args[], int *nargs, int *redirected_fd) {
             *redirected_fd = STDOUT_FILENO;
         } else if (strcmp(args[i], "2>") == 0) {
             *redirected_fd = STDERR_FILENO;
-        } else if (strcmp(args[i], ">>") == 0 || strcmp(args[i], "1>>") == 0||strcmp(args[i], "2>>") == 0) {
+        } else if (strcmp(args[i], ">>") == 0 || strcmp(args[i], "1>>") == 0) {
             *redirected_fd = STDOUT_FILENO;
              open_flags = O_WRONLY | O_CREAT | O_APPEND;
         } else if (strcmp(args[i], "2>>") == 0) {
