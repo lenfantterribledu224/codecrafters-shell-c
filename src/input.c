@@ -1,7 +1,9 @@
-#include "input.h"
+#include <stdio.h>
+#include <string.h>
 #include <termios.h>
 #include <unistd.h>
 #include "shell.h"
+#include "input.h"
 
 void read_input(char *buf, int size) {
     struct termios orig, raw;
