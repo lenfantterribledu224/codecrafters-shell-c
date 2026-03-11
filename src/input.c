@@ -22,16 +22,20 @@ void read_input(char *buf, int size) {
             break;
         } else if (c == '\t') {
             buf[i] = '\0';
+            int matched = 0;
             for (int j = 0; j < num_builtins; j++) {
                  if (strncmp(buf, builtins[j].name, i) == 0) {
                  printf("%s ", builtins[j].name + i);
                  strcpy(buf, builtins[j].name);
                  strcat(buf, " ");
                  i = strlen(buf);
+                 matched = 1;
                  break;
         }
     }
-        } else if (c == 127) {  // backspace
+    if (!matched) printf("\a");
+  }
+         else if (c == 127) {  // backspace
             if (i > 0) {
                 i--;
                 printf("\b \b");
