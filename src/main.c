@@ -4,6 +4,7 @@
 #include "shell.h"
 #include "utils.h"
 #include <unistd.h>
+#include "input.h"
 
 int main(int argc, char *argv[]) {
 setbuf(stdout, NULL);
