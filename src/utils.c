@@ -64,12 +64,16 @@ void parse_args(char *input, char *args[], int *argc) {
 
 
 int handle_redirection(char *args[], int *nargs, int *redirected_fd) {
+    int open_flags = O_WRONLY | O_CREAT | O_TRUNC;
     for (int i = 0; i < *nargs; i++) {
 
         if (strcmp(args[i], ">") == 0 || strcmp(args[i], "1>") == 0) {
             *redirected_fd = STDOUT_FILENO;
         } else if (strcmp(args[i], "2>") == 0) {
             *redirected_fd = STDERR_FILENO;
+        } else if (strcmp(args[i], ">>") == 0 || strcmp(args[i], "1>>") == 0) {
+            *redirected_fd = STDOUT_FILENO;
+             open_flags = O_WRONLY | O_CREAT | O_APPEND;
         }
 
         if (*redirected_fd != -1) {
@@ -78,7 +82,7 @@ int handle_redirection(char *args[], int *nargs, int *redirected_fd) {
             args[i] = NULL;
 
             int saved_fd = dup(*redirected_fd);
-            int fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            int fd = open(filename, open_flags, 0644);
             dup2(fd, *redirected_fd);
             close(fd);
 
