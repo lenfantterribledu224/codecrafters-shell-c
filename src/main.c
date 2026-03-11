@@ -12,8 +12,7 @@ char command[1024];
 while(1){
 
   printf("$ ");
-  fgets(command, sizeof(command), stdin);
-  command[strcspn(command, "\n")] = '\0';
+  read_input(command, sizeof(command));
 
   char *args[1024];
   int nargs = 0;
