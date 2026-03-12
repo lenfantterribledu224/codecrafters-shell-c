@@ -5,7 +5,7 @@
 #include "shell.h"
 #include "input.h"
 #include "utils.h"
-
+#include <stdlib.h>
 void read_input(char *buf, int size) {
     struct termios orig, raw;
     tcgetattr(STDIN_FILENO, &orig);
