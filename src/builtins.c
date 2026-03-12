@@ -6,6 +6,7 @@
 #include <sys/wait.h>
 #include <ctype.h>
 #include "utils.h"
+#include <dirent.h>
 
 void do_echo(char *args[], int nargs) {
     for (int i = 1; i < nargs; i++) {
@@ -27,6 +28,28 @@ Builtin builtins[] = {
 };
 int num_builtins = sizeof(builtins) / sizeof(builtins[0]);
 
+char *find_in_path(const char *cmd) {
+    char *path = getenv("PATH");
+    if (path == NULL) {
+        printf("%s: not found\n", cmd);
+        return NULL;
+    }
+
+    char path_copy[1024];
+    strcpy(path_copy, path);
+
+    char *dir = strtok(path_copy, ":");
+    while (dir != NULL) {
+        char full_path[1024];
+        snprintf(full_path, sizeof(full_path), "%s/%s", dir, cmd);
+        if (access(full_path, X_OK) == 0) {
+            return strdup(full_path);
+        }
+        dir = strtok(NULL, ":");
+    }
+    return NULL;
+}
+
 void do_type(char *args[], int nargs) {
     if (nargs < 2) return;
 
@@ -39,26 +62,13 @@ void do_type(char *args[], int nargs) {
         }
     }
 
-    char *path = getenv("PATH");
-    if (path == NULL) {
-        printf("%s: not found\n", cmd);
-        return;
+    char *full_path = find_in_path(cmd);
+    if (full_path != NULL) {
+    printf("%s is %s\n", cmd, full_path);
+    free(full_path);
+    return;
     }
-
-    char path_copy[1024];
-    strcpy(path_copy, path);
-
-    char *dir = strtok(path_copy, ":");
-    while (dir != NULL) {
-        char full_path[1024];
-        snprintf(full_path, sizeof(full_path), "%s/%s", dir, cmd);
-        if (access(full_path, X_OK) == 0) {
-            printf("%s is %s\n", cmd, full_path);
-            return;
-        }
-        dir = strtok(NULL, ":");
-    }
-    printf("%s: not found\n", cmd);
+   printf("%s: not found\n", cmd);
 }
 
 void do_execute(char *args[], int nargs) {
@@ -84,4 +94,33 @@ void do_cd(char *args[], int nargs) {
     if (chdir(path) != 0) {
         printf("cd: %s: No such file or directory\n", path);
     }
+}
+
+char *find_in_path_prefix(const char *cmd) {
+    char *path = getenv("PATH");
+    if (path == NULL) return NULL;
+
+    char path_copy[1024];
+    strcpy(path_copy, path);
+
+    char *dir = strtok(path_copy, ":");
+    while (dir != NULL) {
+        DIR *d = opendir(dir);
+        if (d != NULL) {
+            struct dirent *entry;
+            while ((entry = readdir(d)) != NULL) {
+                if (strncmp(entry->d_name, cmd, strlen(cmd)) == 0) {
+                    char full_path[1024];
+                    snprintf(full_path, sizeof(full_path), "%s/%s", dir, entry->d_name);
+                    if (access(full_path, X_OK) == 0) {
+                        closedir(d);
+                        return strdup(entry->d_name);
+                    }
+                }
+            }
+            closedir(d);
+        }
+        dir = strtok(NULL, ":");
+    }
+    return NULL;
 }

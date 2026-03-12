@@ -31,10 +31,22 @@ void read_input(char *buf, int size) {
                  i = strlen(buf);
                  matched = 1;
                  break;
+            }
+
         }
+        if (!matched) {
+                char *result = find_in_path_prefix(buf);
+                if (result != NULL) {
+                    printf("%s ", result + i);
+                    strcpy(buf, result);
+                    strcat(buf, " ");
+                    i = strlen(buf);
+                    free(result);
+                    matched = 1;
+                }
+            }
+        if (!matched) printf("\a");
     }
-    if (!matched) printf("\a");
-  }
          else if (c == 127) {  // backspace
             if (i > 0) {
                 i--;
