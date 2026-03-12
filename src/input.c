@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include "shell.h"
 #include "input.h"
+#include "utils.h"
 
 void read_input(char *buf, int size) {
     struct termios orig, raw;
