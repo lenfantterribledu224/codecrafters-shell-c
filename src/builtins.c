@@ -98,7 +98,7 @@ void do_cd(char *args[], int nargs) {
 
 void find_in_path_prefix(const char *cmd, char *matches[], int *count)  {
     char *path = getenv("PATH");
-    if (path == NULL) return NULL;
+    if (path == NULL) return;
 
     char path_copy[1024];
     strcpy(path_copy, path);
@@ -122,5 +122,5 @@ void find_in_path_prefix(const char *cmd, char *matches[], int *count)  {
         }
         dir = strtok(NULL, ":");
     }
-    return NULL;
+    return;
 }
