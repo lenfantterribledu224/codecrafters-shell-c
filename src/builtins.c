@@ -96,7 +96,7 @@ void do_cd(char *args[], int nargs) {
     }
 }
 
-char *find_in_path_prefix(const char *cmd) {
+void find_in_path_prefix(const char *cmd, char *matches[], int *count)  {
     char *path = getenv("PATH");
     if (path == NULL) return NULL;
 
@@ -114,7 +114,7 @@ char *find_in_path_prefix(const char *cmd) {
                     snprintf(full_path, sizeof(full_path), "%s/%s", dir, entry->d_name);
                     if (access(full_path, X_OK) == 0) {
                         closedir(d);
-                        return strdup(entry->d_name);
+                        matches[(*count)++] = strdup(entry->d_name);
                     }
                 }
             }

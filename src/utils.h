@@ -6,5 +6,5 @@ void parse_args(char *input, char *args[], int *argc);
 int handle_redirection(char *args[], int *nargs, int *redirected_fd);
 void free_args(char *args[], int nargs);
 char *find_in_path(const char *cmd);
-char *find_in_path_prefix(const char *cmd);
+void find_in_path_prefix(const char *cmd, char *matches[], int *count);
 #endif
