@@ -69,6 +69,7 @@ static void try_complete_path(char *buf, int *pos, int last_was_tab) {
         show_matches(matches, count, buf);
     } else {
         printf("\a");
+        fflush(stdout);
     }
 
     for (int j = 0; j < count; j++)
