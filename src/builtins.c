@@ -113,7 +113,6 @@ void find_in_path_prefix(const char *cmd, char *matches[], int *count)  {
                     char full_path[1024];
                     snprintf(full_path, sizeof(full_path), "%s/%s", dir, entry->d_name);
                     if (access(full_path, X_OK) == 0) {
-                        closedir(d);
                         matches[(*count)++] = strdup(entry->d_name);
                     }
                 }
