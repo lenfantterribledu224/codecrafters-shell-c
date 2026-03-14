@@ -145,17 +145,19 @@ static void handle_tab(char *buf, int *pos, int last_was_tab) {
         if (count == 1) {
         printf("%s ", matches[0] + prefix_len);
         fflush(stdout);
-        strcpy(arg, matches[0]);
+        char *write_point = (last_slash != NULL) ? last_slash + 1 : arg;
+        strcpy(write_point, matches[0]);
         strcat(buf, " ");
         *pos = strlen(buf);
     } else if (count > 1) {
         int lcp = compute_lcp(matches, count);
         if (lcp > prefix_len) {
             for (int k = prefix_len; k < lcp; k++)
-            printf("%c", matches[0][k]);
+                printf("%c", matches[0][k]);
             fflush(stdout);
-            strncpy(arg, matches[0], lcp);
-            arg[lcp] = '\0';
+            char *write_point = (last_slash != NULL) ? last_slash + 1 : arg;
+            strncpy(write_point, matches[0], lcp);
+            write_point[lcp] = '\0';
             *pos = strlen(buf);
         } else if (last_was_tab) {
             show_matches(matches, count, buf);
