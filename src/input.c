@@ -6,6 +6,7 @@
 #include "input.h"
 #include "utils.h"
 #include <stdlib.h>
+#include <dirent.h>
 
 static struct termios orig_termios;
 
@@ -104,13 +105,69 @@ for (int j = 0; j < count; j++)
     free(matches[j]);
 }
 
+static void find_file_matches(const char *dir, const char *prefix,
+                              char *matches[], int *count) {
+    DIR *d = opendir(dir);
+    if (d == NULL) return;
 
+    int prefix_len = strlen(prefix);
+    struct dirent *entry;
+    while ((entry = readdir(d)) != NULL) {
+        if (strncmp(entry->d_name, prefix, prefix_len) == 0) {
+            matches[(*count)++] = strdup(entry->d_name);
+        }
+    }
+    closedir(d);
+}
 
 static void handle_tab(char *buf, int *pos, int last_was_tab) {
     buf[*pos] = '\0';
 
-    if (!try_complete_builtin(buf, pos))
-        try_complete_path(buf, pos, last_was_tab);
+    char *last_space = strrchr(buf, ' ');
+    if (last_space != NULL) {
+        char *arg = last_space + 1;
+        char dir[1024] = ".";
+        char *prefix = arg;
+        char *last_slash = strrchr(arg, '/');
+
+        if (last_slash != NULL) {
+            int dir_len = last_slash - arg + 1;
+            strncpy(dir, arg, dir_len);
+            dir[dir_len] = '\0';
+            prefix = last_slash + 1;
+        }
+
+        char *matches[1024];
+        int count = 0;
+        find_file_matches(dir, prefix, matches, &count);
+        int prefix_len = strlen(prefix);
+
+        if (count == 1) {
+        printf("%s ", matches[0] + prefix_len);
+        fflush(stdout);
+        strcpy(arg, matches[0]);
+        strcat(buf, " ");
+        *pos = strlen(buf);
+    } else if (count > 1) {
+        int lcp = compute_lcp(matches, count);
+        if (lcp > prefix_len) {
+            for (int k = prefix_len; k < lcp; k++)
+            printf("%c", matches[0][k]);
+            fflush(stdout);
+            strncpy(arg, matches[0], lcp);
+            arg[lcp] = '\0';
+            *pos = strlen(buf);
+        } else if (last_was_tab) {
+            show_matches(matches, count, buf);
+        } else {
+            write(STDOUT_FILENO, "\x07", 1);
+        }
+    }
+
+    } else {
+        if (!try_complete_builtin(buf, pos))
+            try_complete_path(buf, pos, last_was_tab);
+    }
 }
 
 static void handle_backspace(char *buf, int *pos) {
