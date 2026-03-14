@@ -113,6 +113,8 @@ static void find_file_matches(const char *dir, const char *prefix,
     int prefix_len = strlen(prefix);
     struct dirent *entry;
     while ((entry = readdir(d)) != NULL) {
+        if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+            continue;
         if (strncmp(entry->d_name, prefix, prefix_len) == 0) {
             matches[(*count)++] = strdup(entry->d_name);
         }
