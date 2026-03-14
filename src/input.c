@@ -57,24 +57,55 @@ static int try_complete_builtin(char *buf, int *pos) {
     return 0;
 }
 
+static int compute_lcp(char *matches[], int count) {
+    int prefix_len = strlen(matches[0]);
+    for (int j = 1; j < count; j++) {
+        int k = 0;
+        while (k < prefix_len && matches[j][k] == matches[0][k])
+            k++;
+        prefix_len = k;
+    }
+    return prefix_len;
+}
+
+static void complete_partial(char *buf, int *pos, const char *ref, int prefix_len) {
+    for (int k = *pos; k < prefix_len; k++)
+        printf("%c", ref[k]);
+    fflush(stdout);
+
+    strncpy(buf, ref, prefix_len);
+    buf[prefix_len] = '\0';
+    *pos = prefix_len;
+}
+
+
 static void try_complete_path(char *buf, int *pos, int last_was_tab) {
     char *matches[1024];
     int count = 0;
 
     find_in_path_prefix(buf, matches, &count);
 
-    if (count == 1) {
-        complete_word(buf, pos, matches[0]);
-    } else if (count > 1 && last_was_tab) {
+   if (count == 1) {
+    complete_word(buf, pos, matches[0]);
+}  else if (count > 1) {
+    int prefix_len = compute_lcp(matches, count);
+    if (prefix_len > *pos) {          // caller decides whether to call
+        complete_partial(buf, pos, matches[0], prefix_len);  // function just does the work
+    } else if (last_was_tab) {
         show_matches(matches, count, buf);
     } else {
-        printf("\a");
-        fflush(stdout);
+        write(STDOUT_FILENO, "\x07", 1);
     }
-
-    for (int j = 0; j < count; j++)
-        free(matches[j]);
+} else {
+    write(STDOUT_FILENO, "\x07", 1);
 }
+
+for (int j = 0; j < count; j++)
+    free(matches[j]);
+}
+
+
+
 static void handle_tab(char *buf, int *pos, int last_was_tab) {
     buf[*pos] = '\0';
 
