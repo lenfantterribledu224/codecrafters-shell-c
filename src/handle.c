@@ -3,6 +3,7 @@
 #include "matches.h"
 #include <stdio.h>
 #include "handle.h"
+#include <string.h>
 
  void handle_printable(char *buf, int *pos, char c) {
     buf[(*pos)++] = c;
