@@ -26,7 +26,7 @@ int try_complete_builtin(EditState *state) {
     return 0;
 }
 
- static void complete_partial(EditState *state, const char *ref, int prefix_len) {
+  void complete_partial(EditState *state, const char *ref, int prefix_len) {
     for (int k = *state->pos; k < prefix_len; k++)
         printf("%c", ref[k]);
     fflush(stdout);
