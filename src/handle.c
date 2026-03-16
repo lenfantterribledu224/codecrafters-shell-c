@@ -2,7 +2,7 @@
 #include "completion.h"
 #include "matches.h"
 #include <stdio.h>
-#include <handle.h>
+#include "handle.h"
 
  void handle_printable(char *buf, int *pos, char c) {
     buf[(*pos)++] = c;
