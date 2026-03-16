@@ -1,7 +1,7 @@
 #include "matches.h"
 #include <dirent.h>
 #include <string.h>
-
+#include <stdio.h>
  int compute_lcp(MatchList *matches) {
     int prefix_len = strlen(matches->items[0]);
     for (int j = 1; j < matches->count; j++) {
