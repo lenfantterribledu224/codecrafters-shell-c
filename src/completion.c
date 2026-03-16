@@ -6,6 +6,7 @@
 #include "shell.h"
 #include "completion.h"
 #include "utils.h"
+#include "matches.h"
 
 
  static void  complete_word(EditState *state, const char *full) {
@@ -37,19 +38,18 @@ int try_complete_builtin(EditState *state) {
 }
 
  void try_complete_path(EditState *state, int last_was_tab) {
-    char *matches[1024];
-    int count = 0;
+     MatchList list = { .count = 0 };
 
-    find_in_path_prefix(state->buf, matches, &count);
+    find_in_path_prefix(state->buf, list.items, &list.count);
 
-   if (count == 1) {
-    complete_word(state, matches[0]);
-}  else if (count > 1) {
-    int prefix_len = compute_lcp(matches, count);
+   if (list.count == 1) {
+    complete_word(state, list.items[0]);
+}  else if (list.count > 1) {
+    int prefix_len = compute_lcp(&list);
     if (prefix_len > *state->pos) {          // caller decides whether to call
-        complete_partial(state, matches[0], prefix_len);  // function just does the work
+        complete_partial(state, list.items[0], prefix_len);  // function just does the work
     } else if (last_was_tab) {
-        show_matches(matches, count, state->buf);
+        show_matches(&list, state->buf);
     } else {
         write(STDOUT_FILENO, "\x07", 1);
     }
@@ -57,8 +57,8 @@ int try_complete_builtin(EditState *state) {
     write(STDOUT_FILENO, "\x07", 1);
 }
 
-for (int j = 0; j < count; j++)
-    free(matches[j]);
+for (int j = 0; j < list.count; j++)
+    free(list.items[j]);
 }
 
 
