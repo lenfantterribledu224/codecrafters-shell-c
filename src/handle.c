@@ -64,6 +64,8 @@
         } else {
             write(STDOUT_FILENO, "\x07", 1);
         }
+    }else {
+         write(STDOUT_FILENO, "\x07", 1);
     }
 
     } else {
