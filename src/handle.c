@@ -16,7 +16,7 @@ static void handle_backspace(char *buf, int *pos) {
         printf("\b \b");
     }
 }
-static void handle_tab(char *buf, int *pos, int last_was_tab) {
+ void handle_tab(char *buf, int *pos, int last_was_tab) {
     buf[*pos] = '\0';
 
     char *last_space = strrchr(buf, ' ');
