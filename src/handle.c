@@ -38,11 +38,16 @@
         int prefix_len = strlen(prefix);
 
         if (matches.count == 1) {
-        printf("%s ", matches.items[0] + prefix_len);
+        int len = strlen(matches.items[0]);
+        int is_dir = (matches.items[0][len - 1] == '/');
+        char *suffix = is_dir ? "" : " ";
+
+        printf("%s%s", matches.items[0] + prefix_len, suffix);
         fflush(stdout);
         char *write_point = (last_slash != NULL) ? last_slash + 1 : arg;
         strcpy(write_point, matches.items[0]);
-        strcat(buf, " ");
+        if (!is_dir)
+            strcat(buf, " ");
         *pos = strlen(buf);
     } else if (matches.count > 1) {
         int lcp = compute_lcp(&matches);
