@@ -10,7 +10,7 @@
     printf("%c", c);
 }
 
-static void handle_backspace(char *buf, int *pos) {
+ void handle_backspace(char *buf, int *pos) {
     if (*pos > 0) {
         (*pos)--;
         printf("\b \b");
