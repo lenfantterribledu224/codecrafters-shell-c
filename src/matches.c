@@ -2,6 +2,7 @@
 #include <dirent.h>
 #include <string.h>
 #include <stdio.h>
+
  int compute_lcp(MatchList *matches) {
     int prefix_len = strlen(matches->items[0]);
     for (int j = 1; j < matches->count; j++) {
@@ -33,8 +34,14 @@ static void sort_matches(MatchList *matches) {
         if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
             continue;
         if (strncmp(entry->d_name, prefix, prefix_len) == 0) {
-             matches->items[matches->count++] = strdup(entry->d_name);
-        }
+            if (entry->d_type == DT_DIR) {
+                char dir_name[1024];
+                snprintf(dir_name, sizeof(dir_name), "%s/", entry->d_name);
+                matches->items[matches->count++] = strdup(dir_name);
+            } else {
+                matches->items[matches->count++] = strdup(entry->d_name);
+            }
+}
     }
     closedir(d);
 }
