@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include "completion.h"
 #include "handle.h"
+#include "terminal.h"
 
 void read_input(char *buf, int size) {
     enable_raw_mode();
