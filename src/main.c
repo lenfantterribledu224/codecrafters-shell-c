@@ -30,8 +30,8 @@ while(1){
 
   if (pipe_pos != -1) {
       // handle pipeline, then skip everything below
-      free_args(args, nargs);
       do_pipeline(args, pipe_pos);
+      free_args(args, nargs);
       continue;
 
   }

@@ -8,7 +8,6 @@
 #include "utils.h"
 void do_pipeline(char *args[], int pipe_pos) {
     // Split into two commands
-    free(args[pipe_pos]);
     args[pipe_pos] = NULL;
     char **left_cmd = args;
     char **right_cmd = &args[pipe_pos + 1];
