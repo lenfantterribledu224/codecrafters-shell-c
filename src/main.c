@@ -5,6 +5,7 @@
 #include "utils.h"
 #include <unistd.h>
 #include "input.h"
+#include "pipeline.h"
 
 int main(int argc, char *argv[]) {
 setbuf(stdout, NULL);
