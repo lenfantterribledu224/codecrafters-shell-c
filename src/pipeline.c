@@ -1,6 +1,10 @@
 #include <sys/types.h>
 #include <unistd.h>
-
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include "shell.h"
+#include "utils.h"
 void do_pipeline(char *args[], int pipe_pos) {
     // Split into two commands
     free(args[pipe_pos]);
