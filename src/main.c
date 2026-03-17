@@ -18,7 +18,22 @@ while(1){
   char *args[1024];
   int nargs = 0;
   parse_args(command, args, &nargs);
+  // check for pipe first
+  int pipe_pos = -1;
+  for (int i = 0; i < nargs; i++) {
+      if (strcmp(args[i], "|") == 0) {
+          pipe_pos = i;
+          break;
+      }
+  }
 
+  if (pipe_pos != -1) {
+      // handle pipeline, then skip everything below
+      free_args(args, nargs);
+      do_pipeline(args, pipe_pos);
+      continue;
+
+  }
   int redirected_fd = -1;  // default to stdout
   int saved_fd = handle_redirection(args, &nargs, &redirected_fd);
 
