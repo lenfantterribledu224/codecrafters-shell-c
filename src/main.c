@@ -12,7 +12,6 @@ setbuf(stdout, NULL);
 char command[1024];
 
 while(1){
-
   printf("$ ");
   read_input(command, sizeof(command));
 
@@ -41,14 +40,8 @@ while(1){
 
   if (strcmp(args[0], "exit") == 0)  {
     break;
-  } else if (strcmp(args[0], "echo") == 0) {
-    do_echo(args, nargs);
-  } else if (strcmp(args[0], "type") == 0) {
-    do_type(args, nargs);
-  } else if (strcmp(args[0], "pwd") == 0) {
-    do_pwd(args, nargs);
-  } else if (strcmp(args[0], "cd") == 0) {
-    do_cd(args, nargs);
+  } else if (is_builtin(args[0])) {
+    run_builtin(args, nargs);
   } else {
     do_execute(args, nargs);
   }
