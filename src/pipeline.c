@@ -31,6 +31,7 @@ void run_builtin(char **args, int nargs) {
         do_cd(args, nargs);
     }
 }
+
 void do_pipeline(char *args[], int pipe_pos) {
     // Split into two commands
     args[pipe_pos] = NULL;
@@ -50,11 +51,10 @@ void do_pipeline(char *args[], int pipe_pos) {
         if(is_builtin(left_cmd[0])) {
             run_builtin(left_cmd, count_args(left_cmd));
             exit(0);
-        }else {
-            execvp(left_cmd[0], left_cmd);
-            perror("execvp");
-            exit(1);
         }
+        execvp(left_cmd[0], left_cmd);
+        perror("execvp");
+        exit(1);
     }
 
     // Fork Child 2 (right command — reader)
@@ -63,10 +63,15 @@ void do_pipeline(char *args[], int pipe_pos) {
         dup2(fd[0], STDIN_FILENO);
         close(fd[0]);
         close(fd[1]);
-        if(is_builtin)
+        if(is_builtin(right_cmd[0])) {
+            run_builtin(right_cmd, count_args(right_cmd));
+            exit(0);
+        }else {
         execvp(right_cmd[0], right_cmd);
         perror("execvp");
         exit(1);
+        }
+
     }
 
     // Parent: close both pipe ends, wait for both children
