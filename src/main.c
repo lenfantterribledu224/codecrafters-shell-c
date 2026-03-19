@@ -45,11 +45,12 @@ while(1){
 
   if (strcmp(args[0], "exit") == 0)  {
     break;
-  } else if (is_builtin(args[0])) {
-    run_builtin(args, nargs);
   } else if (strcmp(args[0], "history") == 0) {
     do_history(history, history_count);
-  } else {
+  }
+  else if (is_builtin(args[0])) {
+    run_builtin(args, nargs);
+  }  else {
     do_execute(args, nargs);
   }
   if (saved_fd != -1) {
@@ -57,7 +58,6 @@ while(1){
     close(saved_fd);
 }
   free_args(args, nargs);
-  free_args(history, history_count);
 }
 
   return 0;
