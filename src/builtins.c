@@ -19,8 +19,10 @@ void do_echo(char *args[], int nargs) {
 void do_exit(char *args[], int nargs) {
     exit(0);
 }
-void do_history(char *args[], int nargs) {
-    // Implementation for history command
+void do_history(char **history, int count) {
+    for (int i = 0; i < count; i++) {
+        printf("%4d  %s\n", i + 1, history[i]);
+    }
 }
 Builtin builtins[] = {
     {"echo", do_echo},

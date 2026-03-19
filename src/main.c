@@ -10,10 +10,15 @@
 int main(int argc, char *argv[]) {
 setbuf(stdout, NULL);
 char command[1024];
-
+char *history[1024];
+int history_count = 0;
 while(1){
   printf("$ ");
   read_input(command, sizeof(command));
+
+
+// inside the loop, right after read_input:
+ history[history_count++] = strdup(command);
 
   char *args[1024];
   int nargs = 0;
@@ -42,6 +47,8 @@ while(1){
     break;
   } else if (is_builtin(args[0])) {
     run_builtin(args, nargs);
+  } else if (strcmp(args[0], "history") == 0) {
+    do_history(history, history_count);
   } else {
     do_execute(args, nargs);
   }
@@ -50,6 +57,7 @@ while(1){
     close(saved_fd);
 }
   free_args(args, nargs);
+  free_args(history, history_count);
 }
 
   return 0;
