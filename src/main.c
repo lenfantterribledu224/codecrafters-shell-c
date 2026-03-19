@@ -19,17 +19,17 @@ while(1){
   int nargs = 0;
   parse_args(command, args, &nargs);
   // check for pipe first
-  int pipe_pos = -1;
+  int has_pipe = 0;
   for (int i = 0; i < nargs; i++) {
       if (strcmp(args[i], "|") == 0) {
-          pipe_pos = i;
+          has_pipe = 1;
           break;
       }
   }
 
-  if (pipe_pos != -1) {
+  if (has_pipe) {
       // handle pipeline, then skip everything below
-      do_pipeline(args, pipe_pos);
+      do_pipeline(args, nargs);
       free_args(args, nargs);
       continue;
 

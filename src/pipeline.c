@@ -32,51 +32,64 @@ void run_builtin(char **args, int nargs) {
     }
 }
 
-void do_pipeline(char *args[], int pipe_pos) {
-    // Split into two commands
-    args[pipe_pos] = NULL;
-    char **left_cmd = args;
-    char **right_cmd = &args[pipe_pos + 1];
+int split_on_pipes(char *args[], int nargs, char **cmds[]) {
+    int num_cmds = 0;
 
+    cmds[num_cmds++] = args;
+    for (int i = 0; i < nargs; i++) {
+        if (strcmp(args[i], "|") == 0) {
+            free(args[i]);
+            args[i] = NULL;
+            cmds[num_cmds++] = &args[i + 1];
+        }
+    }
+    return num_cmds;
+};
+void create_pipes(int pipes[][2], int num_pipes) {
+    for (int i = 0; i < num_pipes; i++) {
+        pipe(pipes[i]);
+    }
+}
+
+void fork_children(char **cmds[], int num_cmds, int pipes[][2], pid_t pids[]) {
+    for (int i = 0; i < num_cmds; i++) {
+        pids[i] = fork();
+        if (pids[i] == 0) {
+            if (i > 0) {
+                dup2(pipes[i - 1][0], STDIN_FILENO);
+            }
+            if (i < num_cmds - 1) {
+                dup2(pipes[i][1], STDOUT_FILENO);
+            }
+            // close all pipe fds
+            for (int j = 0; j < num_cmds - 1; j++) {
+                close(pipes[j][0]);
+                close(pipes[j][1]);
+            }
+            // run command next — we'll add this part
+            exit(0);
+        }
+    }
+}
+void do_pipeline(char *args[], int nargs) {
+    // Split into  commands
+     char **cmds[64];
+    int num_cmds = split_on_pipes(args, nargs, cmds);
+    int pipes[num_cmds - 1][2];
     // Create the pipe
-    int fd[2];
-    pipe(fd);
+    create_pipes(pipes, num_cmds - 1);
 
-    // Fork Child 1 (left command — writer)
-    pid_t pid1 = fork();
-    if (pid1 == 0) {
-        dup2(fd[1], STDOUT_FILENO);
-        close(fd[0]);
-        close(fd[1]);
-        if(is_builtin(left_cmd[0])) {
-            run_builtin(left_cmd, count_args(left_cmd));
-            exit(0);
-        }
-        execvp(left_cmd[0], left_cmd);
-        perror("execvp");
-        exit(1);
+    pid_t pids[64];
+    fork_children(cmds, num_cmds, pipes, pids);
+
+     // Parent: close all pipe fds
+    for (int i = 0; i < num_cmds - 1; i++) {
+        close(pipes[i][0]);
+        close(pipes[i][1]);
     }
 
-    // Fork Child 2 (right command — reader)
-    pid_t pid2 = fork();
-    if (pid2 == 0) {
-        dup2(fd[0], STDIN_FILENO);
-        close(fd[0]);
-        close(fd[1]);
-        if(is_builtin(right_cmd[0])) {
-            run_builtin(right_cmd, count_args(right_cmd));
-            exit(0);
-        }else {
-        execvp(right_cmd[0], right_cmd);
-        perror("execvp");
-        exit(1);
-        }
-
+    // Wait for all children
+    for (int i = 0; i < num_cmds; i++) {
+        waitpid(pids[i], NULL, 0);
     }
-
-    // Parent: close both pipe ends, wait for both children
-    close(fd[0]);
-    close(fd[1]);
-    waitpid(pid1, NULL, 0);
-    waitpid(pid2, NULL, 0);
 }
