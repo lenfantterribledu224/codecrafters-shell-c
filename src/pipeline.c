@@ -66,8 +66,15 @@ void fork_children(char **cmds[], int num_cmds, int pipes[][2], pid_t pids[]) {
                 close(pipes[j][0]);
                 close(pipes[j][1]);
             }
-            // run command next — we'll add this part
-            exit(0);
+            // after closing all pipe fds
+            if (is_builtin(cmds[i][0])) {
+                run_builtin(cmds[i], count_args(cmds[i]));
+                exit(0);
+            } else {
+                execvp(cmds[i][0], cmds[i]);
+                perror("execvp");
+                exit(1);
+            }
         }
     }
 }
