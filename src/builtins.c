@@ -19,12 +19,16 @@ void do_echo(char *args[], int nargs) {
 void do_exit(char *args[], int nargs) {
     exit(0);
 }
+void do_history(char *args[], int nargs) {
+    // Implementation for history command
+}
 Builtin builtins[] = {
     {"echo", do_echo},
     {"exit", do_exit},
     {"type", do_type},
     {"pwd", do_pwd},
-    {"cd", do_cd}
+    {"cd", do_cd},
+    {"history", do_history}
 };
 int num_builtins = sizeof(builtins) / sizeof(builtins[0]);
 
