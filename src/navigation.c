@@ -78,5 +78,5 @@ void history_append_file(const char *path, char **history, int history_count,int
         fprintf(f, "%s\n", history[i]);
     }
     fclose(f);
-    *append_start = *history_count;
+    *append_start = history_count;
 }
