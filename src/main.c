@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include "input.h"
 #include "pipeline.h"
+#include "navigation.h"
 
 int main(int argc, char *argv[]) {
 setbuf(stdout, NULL);
