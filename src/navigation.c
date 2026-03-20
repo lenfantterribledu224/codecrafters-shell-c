@@ -45,7 +45,7 @@ void handle_arrow(char *buf, int *pos, char **history, int history_count, int *h
         replace_line(buf, pos, text);
     }
 }
-void history_read_file(const char *path, char **history, int *history_count) {
+void history_read_file(const char *path, char **history, int *history_count,int *append_start) {
     FILE *f = fopen(path, "r");
     if (!f) return;
 
@@ -56,6 +56,7 @@ void history_read_file(const char *path, char **history, int *history_count) {
             history[(*history_count)++] = strdup(line);
         }
     }
+    *append_start =  history_count;
     fclose(f);
 }
 
@@ -69,12 +70,13 @@ void history_write_file(const char *path, char **history, int history_count) {
     fclose(f);
 }
 
-void history_append_file(const char *path, char **history, int history_count) {
+void history_append_file(const char *path, char **history, int history_count,int *append_start) {
     FILE *f = fopen(path, "a");
     if (!f) return;
 
-    for (int i = 0; i < history_count; i++) {
+    for (int i = *append_start; i < history_count; i++) {
         fprintf(f, "%s\n", history[i]);
     }
     fclose(f);
+    *append_start = history_count;
 }
