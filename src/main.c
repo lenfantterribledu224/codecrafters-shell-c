@@ -52,6 +52,9 @@ while(1){
 
 
   if (strcmp(args[0], "exit") == 0)  {
+     if (histfile != NULL) {
+        history_write_file(histfile, history, history_count);
+    }
     break;
   } else if (strcmp(args[0], "history") == 0) {
       if (nargs > 2 && strcmp(args[1], "-w") == 0) {
