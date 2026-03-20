@@ -56,7 +56,7 @@ void history_read_file(const char *path, char **history, int *history_count,int 
             history[(*history_count)++] = strdup(line);
         }
     }
-    *append_start =  history_count;
+    *append_start =  *history_count;
     fclose(f);
 }
 
@@ -78,5 +78,5 @@ void history_append_file(const char *path, char **history, int history_count,int
         fprintf(f, "%s\n", history[i]);
     }
     fclose(f);
-    *append_start = history_count;
+    *append_start = *history_count;
 }
