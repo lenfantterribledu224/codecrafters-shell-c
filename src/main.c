@@ -1,3 +1,4 @@
+// src/main.c
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,7 +15,7 @@ char *history[1024];
 int history_count = 0;
 while(1){
   printf("$ ");
-  read_input(command, sizeof(command));
+  read_input(command, sizeof(command),history, history_count);
 
 
 // inside the loop, right after read_input:

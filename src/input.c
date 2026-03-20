@@ -1,3 +1,4 @@
+// src/input.c
 #include <string.h>
 #include "matches.h"
 #include <stdio.h>
@@ -5,10 +6,11 @@
 #include "completion.h"
 #include "handle.h"
 #include "terminal.h"
+#include "navigation.h"
 
-void read_input(char *buf, int size) {
+void read_input(char *buf, int size, char **history, int history_count)  {
     enable_raw_mode();
-
+    int history_index = history_count; // start at end of history
     int i = 0;
     int last_was_tab = 0;
     char c;
@@ -19,6 +21,12 @@ void read_input(char *buf, int size) {
         if (c == '\n') {
             break;
         }
+
+        if (c == '\x1b') {
+            handle_arrow(buf, &i, history, history_count, &history_index);
+            continue;
+        }
+
 
         if (c == '\t') {
             handle_tab(buf, &i, last_was_tab);

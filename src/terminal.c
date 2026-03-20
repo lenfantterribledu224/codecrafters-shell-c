@@ -15,3 +15,4 @@ static struct termios orig_termios;
  void disable_raw_mode(void) {
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios);
 }
+
