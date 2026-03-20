@@ -52,6 +52,8 @@ while(1){
         history_write_file(args[2], history, history_count);
     } else if (nargs > 2 && strcmp(args[1], "-r") == 0) {
         history_read_file(args[2], history, &history_count);
+    } else if (nargs > 2 && strcmp(args[1], "-a") == 0) {
+        history_append_file(args[2], history, history_count);
     } else {
       int limit = (nargs > 1) ? atoi(args[1]) : 0;
       do_history(history, history_count, limit);
