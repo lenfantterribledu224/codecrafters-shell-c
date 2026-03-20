@@ -15,6 +15,11 @@ char command[1024];
 char *history[1024];
 int history_count = 0;
 int append_start = 0;
+char *histfile = getenv("HISTFILE");
+if (histfile != NULL) {
+    history_read_file(histfile, history, &history_count, &append_start);
+}
+
 while(1){
   printf("$ ");
   read_input(command, sizeof(command),history, history_count);
