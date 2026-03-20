@@ -14,6 +14,7 @@ setbuf(stdout, NULL);
 char command[1024];
 char *history[1024];
 int history_count = 0;
+int append_start = 0;
 while(1){
   printf("$ ");
   read_input(command, sizeof(command),history, history_count);
@@ -51,9 +52,9 @@ while(1){
       if (nargs > 2 && strcmp(args[1], "-w") == 0) {
         history_write_file(args[2], history, history_count);
     } else if (nargs > 2 && strcmp(args[1], "-r") == 0) {
-        history_read_file(args[2], history, &history_count);
+        history_read_file(args[2], history, &history_count, &append_start);
     } else if (nargs > 2 && strcmp(args[1], "-a") == 0) {
-        history_append_file(args[2], history, history_count);
+        history_append_file(args[2], history, history_count, &append_start);
     } else {
       int limit = (nargs > 1) ? atoi(args[1]) : 0;
       do_history(history, history_count, limit);
