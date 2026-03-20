@@ -19,8 +19,12 @@ void do_echo(char *args[], int nargs) {
 void do_exit(char *args[], int nargs) {
     exit(0);
 }
-void do_history(char **history, int count) {
-    for (int i = 0; i < count; i++) {
+void do_history(char **history, int count, int limit) {
+    int start = 0;
+    if(limit > 0 && count > limit) {
+        start = count - limit;
+    }
+    for (int i = start; i < count; i++) {
         printf("%4d  %s\n", i + 1, history[i]);
     }
 }
@@ -30,7 +34,6 @@ Builtin builtins[] = {
     {"type", do_type},
     {"pwd", do_pwd},
     {"cd", do_cd},
-    {"history", do_history}
 };
 int num_builtins = sizeof(builtins) / sizeof(builtins[0]);
 
@@ -60,6 +63,10 @@ void do_type(char *args[], int nargs) {
     if (nargs < 2) return;
 
     char *cmd = args[1];
+    if (strcmp(cmd, "history") == 0 || strcmp(cmd, "exit") == 0) {
+        printf("%s is a shell builtin\n", cmd);
+        return;
+    }
 
     for (int i = 0; i < num_builtins; i++) {
         if (strcmp(cmd, builtins[i].name) == 0) {

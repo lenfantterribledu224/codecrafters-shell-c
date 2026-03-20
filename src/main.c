@@ -46,7 +46,8 @@ while(1){
   if (strcmp(args[0], "exit") == 0)  {
     break;
   } else if (strcmp(args[0], "history") == 0) {
-    do_history(history, history_count);
+     int limit = (nargs > 1) ? atoi(args[1]) : 0;
+    do_history(history, history_count, limit);
   }
   else if (is_builtin(args[0])) {
     run_builtin(args, nargs);
