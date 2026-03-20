@@ -58,3 +58,13 @@ void history_read_file(const char *path, char **history, int *history_count) {
     }
     fclose(f);
 }
+
+void history_write_file(const char *path, char **history, int history_count) {
+    FILE *f = fopen(path, "w");
+    if (!f) return;
+
+    for (int i = 0; i < history_count; i++) {
+        fprintf(f, "%s\n", history[i]);
+    }
+    fclose(f);
+}
