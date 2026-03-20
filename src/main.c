@@ -47,8 +47,13 @@ while(1){
   if (strcmp(args[0], "exit") == 0)  {
     break;
   } else if (strcmp(args[0], "history") == 0) {
-     int limit = (nargs > 1) ? atoi(args[1]) : 0;
-    do_history(history, history_count, limit);
+     if (nargs > 2 && strcmp(args[1], "-r") == 0){
+        history_read_file(args[2], history, &history_count);
+     } else {
+        int limit = (nargs > 1) ? atoi(args[1]) : 0;
+        do_history(history, history_count, limit);
+     }
+   ;
   }
   else if (is_builtin(args[0])) {
     run_builtin(args, nargs);

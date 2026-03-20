@@ -1,6 +1,8 @@
+// src/navigation.c
 #include <unistd.h>
 #include <string.h>
-
+#include <stdio.h>
+#include "navigation.h"
 int read_arrow_key() {
     char seq[2];
     read(STDIN_FILENO, &seq[0], 1);
@@ -42,4 +44,17 @@ void handle_arrow(char *buf, int *pos, char **history, int history_count, int *h
         const char *text = (*history_index < history_count) ? history[*history_index] : "";
         replace_line(buf, pos, text);
     }
+}
+void history_read_file(const char *path, char **history, int *history_count) {
+    FILE *f = fopen(path, "r");
+    if (!f) return;
+
+    char line[1024];
+    while (fgets(line, sizeof(line), f)) {
+        line[strcspn(line, "\n")] = '\0';
+        if (strlen(line) > 0) {
+            history[(*history_count)++] = strdup(line);
+        }
+    }
+    fclose(f);
 }
