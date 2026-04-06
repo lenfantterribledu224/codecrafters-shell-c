@@ -61,7 +61,10 @@ char *find_in_path(const char *cmd) {
 }
 void do_jobs(char *args[], int nargs) {
     for (int i = 0; i < job_count; i++) {
-        printf("[%d]+  Running                 %s &\n", jobs[i].job_number, jobs[i].command);
+        char marker = ' ';
+        if (i == job_count - 1) marker = '+';
+        else if (i == job_count - 2) marker = '-';
+        printf("[%d]%c  Running                 %s &\n", jobs[i].job_number,marker, jobs[i].command);
     }
 }
 void do_type(char *args[], int nargs) {
