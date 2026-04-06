@@ -60,13 +60,26 @@ char *find_in_path(const char *cmd) {
     return NULL;
 }
 void do_jobs(char *args[], int nargs) {
-    reap_jobs();
     for (int i = 0; i < job_count; i++) {
         char marker = ' ';
+        int status;
+        pid_t result = waitpid(jobs[i].pid, &status, WNOHANG);
+        if (result > 0) {
+            strcpy(jobs[i].status, "Done");
+        }
+
         if (i == job_count - 1) marker = '+';
         else if (i == job_count - 2) marker = '-';
-        printf("[%d]%c  %-24s%s &\n", jobs[i].job_number, marker, jobs[i].status, jobs[i].command);
+                printf("[%d]%c  %-24s%s%s\n", jobs[i].job_number, marker, jobs[i].status, jobs[i].command, strcmp(jobs[i].status, "Done") == 0 ? "" : " &");
     }
+    int new_count = 0;
+    for (int i = 0; i < job_count; i++) {
+        if (strcmp(jobs[i].status, "Done") != 0) {
+            jobs[new_count] = jobs[i];
+            new_count++;
+        }
+    }
+    job_count = new_count;
 }
 void do_type(char *args[], int nargs) {
     if (nargs < 2) return;
