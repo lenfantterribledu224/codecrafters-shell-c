@@ -21,6 +21,7 @@ if (histfile != NULL) {
 }
 
 while(1){
+  reap_jobs();
   printf("$ ");
   read_input(command, sizeof(command),history, history_count);
 
