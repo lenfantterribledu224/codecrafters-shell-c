@@ -139,3 +139,18 @@ void find_in_path_prefix(const char *cmd, char *matches[], int *count)  {
     }
     return;
 }
+int job_count = 0;
+Job jobs[256];
+void do_background(char *args[], int nargs) {
+    pid_t pid = fork();
+    if (pid == 0) {
+        execvp(args[0], args);
+        printf("%s: not found\n", args[0]);
+        exit(1);
+    } else {
+        job_count++;
+        jobs[job_count - 1].job_number = job_count;
+        jobs[job_count - 1].pid = pid;
+        printf("[%d] %d\n", job_count, pid);
+    }
+}

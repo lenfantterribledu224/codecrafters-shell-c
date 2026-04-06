@@ -31,6 +31,12 @@ while(1){
   char *args[1024];
   int nargs = 0;
   parse_args(command, args, &nargs);
+  int background = 0;
+  if (nargs > 0 && strcmp(args[nargs - 1], "&") == 0) {
+      background = 1;
+      nargs--;
+      args[nargs] = NULL;
+  }
   // check for pipe first
   int has_pipe = 0;
   for (int i = 0; i < nargs; i++) {
@@ -71,7 +77,10 @@ while(1){
   }
   else if (is_builtin(args[0])) {
     run_builtin(args, nargs);
-  }  else {
+  } else if(background){
+    do_background(args, nargs);
+  }
+   else {
     do_execute(args, nargs);
   }
   if (saved_fd != -1) {
