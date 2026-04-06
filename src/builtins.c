@@ -34,6 +34,7 @@ Builtin builtins[] = {
     {"type", do_type},
     {"pwd", do_pwd},
     {"cd", do_cd},
+    {"jobs", do_jobs}
 };
 int num_builtins = sizeof(builtins) / sizeof(builtins[0]);
 
@@ -58,7 +59,9 @@ char *find_in_path(const char *cmd) {
     }
     return NULL;
 }
-
+void do_jobs(char *args[], int nargs){
+    return;
+};
 void do_type(char *args[], int nargs) {
     if (nargs < 2) return;
 
