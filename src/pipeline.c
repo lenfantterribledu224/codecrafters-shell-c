@@ -17,7 +17,9 @@ int is_builtin(char *cmd) {
             strcmp(cmd, "type") == 0 ||
             strcmp(cmd, "pwd") == 0 ||
             strcmp(cmd, "cd") == 0 ||
-            strcmp(cmd, "exit") == 0);
+            strcmp(cmd, "exit") == 0 ||
+            strcmp(cmd, "jobs") == 0
+        );
 }
 
 void run_builtin(char **args, int nargs) {
