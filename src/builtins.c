@@ -59,9 +59,11 @@ char *find_in_path(const char *cmd) {
     }
     return NULL;
 }
-void do_jobs(char *args[], int nargs){
-    return;
-};
+void do_jobs(char *args[], int nargs) {
+    for (int i = 0; i < job_count; i++) {
+        printf("[%d]+  Running                 %s &\n", jobs[i].job_number, jobs[i].command);
+    }
+}
 void do_type(char *args[], int nargs) {
     if (nargs < 2) return;
 
@@ -151,6 +153,12 @@ void do_background(char *args[], int nargs) {
         job_count++;
         jobs[job_count - 1].job_number = job_count;
         jobs[job_count - 1].pid = pid;
+        char cmd_str[1024] = "";
+        for (int i = 0; i < nargs; i++) {
+            if (i > 0) strcat(cmd_str, " ");
+            strcat(cmd_str, args[i]);
+        }
+        strcpy(jobs[job_count - 1].command, cmd_str);
         printf("[%d] %d\n", job_count, pid);
     }
 }

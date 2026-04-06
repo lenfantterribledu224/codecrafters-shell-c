@@ -10,6 +10,7 @@ typedef struct {
 typedef struct {
     int job_number;
     pid_t pid;
+    char command[1024];
 } Job;
 
 void do_echo(char *args[], int nargs);
