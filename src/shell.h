@@ -23,7 +23,7 @@ void do_pwd(char *args[], int nargs);
 void do_cd(char *args[], int nargs);
 void do_history(char *args[], int count, int limit);
 void do_background(char *args[], int nargs);
-
+void reap_jobs();
 
 extern int job_count;
 extern Job jobs[256];
