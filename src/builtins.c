@@ -182,7 +182,6 @@ void do_background(char *args[], int nargs) {
 }
 
 void reap_jobs() {
-    fprintf(stderr, "reap_jobs called, job_count=%d\n", job_count);
     for (int i = 0; i < job_count; i++) {
         int status;
         pid_t result = waitpid(jobs[i].pid, &status, WNOHANG);
