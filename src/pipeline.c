@@ -27,7 +27,10 @@ void run_builtin(char **args, int nargs) {
         do_type(args, nargs);
     } else if (strcmp(args[0], "pwd") == 0) {
         do_pwd(args, nargs);
-    } else if (strcmp(args[0], "cd") == 0) {
+    } else if(strcmp(args[0], "jobs") ==0){
+        do_jobs(args, nargs);
+    }
+    else if (strcmp(args[0], "cd") == 0) {
         do_cd(args, nargs);
     }
 }
